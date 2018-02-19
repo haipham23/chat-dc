@@ -83,19 +83,35 @@ services:
       - chatnet
     restart: unless-stopped
   chat-history:
-      image: registry.ongtu.com/chat-history:latest
-      container_name: chat_history
-      environment:
-        - MONGO_URL=mongodb://mongo/chat-message
-        - AUTH_API=http://chat-auth:8080/api/auth/verify
-        - LIMIT_MESSAGES=1000
-      ports:
-        - 8085:8080
-      depends_on:
-        - chat-auth
-      networks:
-        - chatnet
-      restart: unless-stopped
+    image: registry.ongtu.com/chat-history:latest
+    container_name: chat_history
+    environment:
+      - MONGO_URL=mongodb://mongo/chat-message
+      - AUTH_API=http://chat-auth:8080/api/auth/verify
+      - LIMIT_MESSAGES=1000
+    ports:
+      - 8085:8080
+    depends_on:
+      - chat-auth
+    networks:
+      - chatnet
+    restart: unless-stopped
+  mp_music:
+    image: registry.ongtu.com/mp-music:latest
+    container_name: mp_music
+    environment:
+      - PORT=8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_CACHE_KEY=music_player_documents
+      - REDIS_TTL=600
+      - PRISMIC_API=https://musicplayer.prismic.io/api
+      - PRISMIC_ACCESS_TOKEN=MC5Xb3J3OFNnQUFDY0FqNG1k.77-9TU5bLe-_ve-_ve-_vSECWxJFJe-_ve-_vVPvv73vv71HJHfvv70tcV7vv73vv73vv73vv73vv71p
+    ports:
+      - 8086:8080
+    networks:
+      - chatnet
+    restart: unless-stopped
 networks:
   chatnet:
     driver: bridge
