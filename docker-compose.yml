@@ -112,6 +112,17 @@ services:
     networks:
       - chatnet
     restart: unless-stopped
+  mp-notify:
+    image: registry.ongtu.com/mp-notify:latest
+    container_name: mp_notify
+    ports:
+      - 8001:8000
+    environment:
+      - SOCKETCLUSTER_WORKERS=2
+      - SOCKETCLUSTER_PORT=8000
+    networks:
+      - chatnet
+    restart: unless-stopped
 networks:
   chatnet:
     driver: bridge
