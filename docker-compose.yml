@@ -1,101 +1,6 @@
 version: '3'
 
 services:
-  chat-auth:
-    image: registry.ongtu.com/chat-auth:latest
-    container_name: chat_auth
-    environment:
-      - NODE_ENV=production
-      - PORT=8080
-      - MONGO_URL=mongodb://mongo/chat-auth
-      - JWT_SECRET=k9lfaTEST22ksha4kjsd
-    ports:
-      - 8081:8080
-    networks:
-      - chatnet
-    restart: unless-stopped
-  chat-socket-server:
-    image: registry.ongtu.com/socket-server:latest
-    container_name: chat_socket_server
-    ports:
-      - 8000:8000
-    environment:
-      - SOCKETCLUSTER_WORKERS=2
-      - SOCKETCLUSTER_PORT=8000
-    networks:
-      - chatnet
-    restart: unless-stopped
-  chat-web:
-    image: registry.ongtu.com/socket-server-client:latest
-    environment:
-      - PORT=8080
-      - NODE_ENV=production
-    ports:
-      - 80:8080
-    networks:
-      - chatnet
-    restart: unless-stopped
-  chat-message:
-    image: registry.ongtu.com/chat-message:latest
-    container_name: chat_message
-    environment:
-      - NODE_ENV=production
-      - PORT=8080
-      - MONGO_URL=mongodb://mongo/chat-message
-      - SOCKET_HOST=chat-socket-server
-      - SOCKET_PORT=8000
-    ports:
-      - 8082:8080
-    depends_on:
-      - chat-socket-server
-    networks:
-      - chatnet
-    restart: unless-stopped
-  chat-queue:
-    image: registry.ongtu.com/chat-queue:latest
-    container_name: chat_queue
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_DB=0
-      - MESSAGE_API=http://chat-message:8080/api/message/save
-      - AUTH_API=http://chat-auth:8080/api/auth/verify
-    ports:
-      - 8083:8080
-    depends_on:
-      - chat-message
-      - chat-auth
-    networks:
-      - chatnet
-    restart: unless-stopped
-  chat-contact:
-    image: registry.ongtu.com/chat-contact:latest
-    container_name: chat_contact
-    environment:
-      - MONGO_URL=mongodb://mongo/chat-contact
-      - AUTH_API=http://chat-auth:8080/api/auth/verify
-      - CHECK_CONTACT_API=http://chat-auth:8080/api/auth/is-exist
-    ports:
-      - 8084:8080
-    depends_on:
-      - chat-auth
-    networks:
-      - chatnet
-    restart: unless-stopped
-  chat-history:
-    image: registry.ongtu.com/chat-history:latest
-    container_name: chat_history
-    environment:
-      - MONGO_URL=mongodb://mongo/chat-message
-      - AUTH_API=http://chat-auth:8080/api/auth/verify
-      - LIMIT_MESSAGES=1000
-    ports:
-      - 8085:8080
-    depends_on:
-      - chat-auth
-    networks:
-      - chatnet
-    restart: unless-stopped
   mp_music:
     image: registry.ongtu.com/mp-music:latest
     container_name: mp_music
@@ -129,7 +34,7 @@ services:
       - PORT=8080
       - NODE_ENV=production
     ports:
-      - 81:8080
+      - 80:8080
     networks:
       - chatnet
     restart: unless-stopped
