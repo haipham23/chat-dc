@@ -123,6 +123,16 @@ services:
     networks:
       - chatnet
     restart: unless-stopped
+  mp-client:
+    image: registry.ongtu.com/mp-client:latest
+    environment:
+      - PORT=8080
+      - NODE_ENV=production
+    ports:
+      - 81:8080
+    networks:
+      - chatnet
+    restart: unless-stopped
 networks:
   chatnet:
     driver: bridge
